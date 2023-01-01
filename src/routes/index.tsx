@@ -1,15 +1,19 @@
-import { RouteObject, createBrowserRouter } from 'react-router-dom';
+import { RouteObject, useRoutes } from 'react-router-dom';
 import { Navigate } from 'react-router';
 import LoginView from 'features/login/LoginView';
+import { FC } from 'react';
+import Layout from 'common/layout';
+import { CategoryListView } from 'features/category/ListView';
+import ProductListView from 'features/product/ListView';
 
-const routerList: RouteObject[] = [
+const routeList: RouteObject[] = [
   {
-    path: '/',
+    index: true,
     element: <Navigate to={'/dashboard'} />
   },
   {
     path: '/',
-    element: <></>,
+    element: <Layout />,
     children: [
       {
         path: 'dashboard',
@@ -17,11 +21,11 @@ const routerList: RouteObject[] = [
       },
       {
         path: 'category',
-        element: <></>
+        element: <CategoryListView />
       },
       {
         path: 'product',
-        element: <></>
+        element: <ProductListView />
       },
       {
         path: 'sale',
@@ -42,9 +46,12 @@ const routerList: RouteObject[] = [
     ]
   },
   {
-    path: '/public/login',
+    path: '/login',
     element: <LoginView />
   }
 ];
 
-export const router = createBrowserRouter(routerList);
+export const RenderRouter: FC = () => {
+  const element = useRoutes(routeList);
+  return element;
+};
