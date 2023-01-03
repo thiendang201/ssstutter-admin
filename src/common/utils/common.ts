@@ -19,3 +19,14 @@ export const formatInputValue = (value: string): string => {
 
   return value;
 };
+
+export function getDifference(a: number, b: number) {
+  return Math.abs(a - b);
+}
+
+export function formatVNCurrency(number: number) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(number);
+}

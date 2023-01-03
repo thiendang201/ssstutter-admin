@@ -31,7 +31,7 @@ export function SearchBar({
   defaultValue = ''
 }: SearchBarProps) {
   const [searchValue, setSearchValue] = useState(defaultValue);
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSearch = useCallback(
     debounce(
@@ -47,11 +47,14 @@ export function SearchBar({
   );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = formatInputValue(e.target.value).toLocaleLowerCase();
+    const value = formatInputValue(e.target.value);
 
-    handleSearch(value);
+    handleSearch(value.toLocaleLowerCase());
     setSearchValue(value);
-    setSearchParams((prev) => ({ ...prev, keyword: value }));
+
+    searchParams.set('keyword', value);
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
   };
 
   return (

@@ -9,7 +9,11 @@ import { DarkModeWrapper } from 'features/darkMode/DarkMode';
 import { Badge } from 'common/components/badge/Badge';
 import { find } from 'lodash';
 import { useCategories } from 'api/categoryApi';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { CircleButton } from 'common/components/button/CircleButton';
+import { MdDelete, MdEdit } from 'react-icons/md';
+import tw from 'twin.macro';
+import { useProductsProps } from 'api/productApi';
 
 export interface CategoryProps {
   id: number | string;
@@ -23,8 +27,14 @@ export interface CategoryProps {
 
 export function CategoryListView() {
   const [searchParams] = useSearchParams();
-  const [keyword, setKeyword] = useState(searchParams.get('keyword') ?? '');
-  const { categories } = useCategories(keyword);
+  const [filter, setFilter] = useState<useProductsProps>({
+    keyword: searchParams.get('keyword') ?? '',
+    page: Number(searchParams.get('page') ?? 1)
+  });
+  const { categories, pagination } = useCategories({
+    keyword: filter.keyword,
+    page: filter.page
+  });
 
   const defaultColumns = useMemo<ColumnDef<CategoryProps>[]>(
     () => [
@@ -39,7 +49,7 @@ export function CategoryListView() {
       },
       {
         accessorKey: 'text',
-        header: 'Display text',
+        header: 'Tên hiển thị',
         cell: (info) => <p className='text-center'>{info.getValue<string>()}</p>
       },
       {
@@ -83,12 +93,36 @@ export function CategoryListView() {
             {find(categories, (c) => c.id === info.getValue())?.name}
           </p>
         )
+      },
+      {
+        accessorKey: 'id',
+        header: '#',
+        cell: (info) => (
+          <div className='flex gap-2 justify-center'>
+            <CircleButton variant='secondary' css={tw`bg-background`}>
+              <Link to={`/category/edit/${info.getValue()}`}>
+                <MdEdit size={20} className='text-icon' />
+              </Link>
+            </CircleButton>
+            <CircleButton variant='secondary' css={tw`bg-background`}>
+              <MdDelete size={20} className='text-icon' />
+            </CircleButton>
+          </div>
+        )
       }
     ],
     []
   );
 
-  const handleSearch = (value: string) => setKeyword(value);
+  const handleFilter = (key: string) => (value: string | number) =>
+    setFilter((prev) => {
+      const state = { ...prev, [key]: value };
+      if (key === 'keyword') {
+        state.page = 1;
+      }
+
+      return state;
+    });
 
   return (
     <div>
@@ -104,17 +138,24 @@ export function CategoryListView() {
           <SearchBar
             variant='outline'
             placeHolder='Tìm kiếm loại sản phẩm'
-            onChange={handleSearch}
+            onChange={handleFilter('keyword')}
             defaultValue={searchParams.get('keyword') ?? ''}
           />
           <Button variant='primary'>
-            <RiAddFill className='text-white' size={24} />
-            Thêm mới
+            <Link to='/category/add' className='flex items-center gap-2'>
+              <RiAddFill className='text-white' size={24} />
+              Thêm mới
+            </Link>
           </Button>
         </div>
       </div>
       <DarkModeWrapper className='p-8 rounded-lg shadow-primary mt-10'>
-        <Table data={categories} columns={defaultColumns} />
+        <Table
+          onPaginationItemClick={handleFilter('page')}
+          data={categories}
+          pagination={pagination}
+          columns={defaultColumns}
+        />
       </DarkModeWrapper>
     </div>
   );

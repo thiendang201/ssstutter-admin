@@ -4,7 +4,11 @@
 @tailwind utilities;
 
 html {
-  @apply text-dark-blue;
+  @apply text-dark-blue scroll-smooth overflow-y-scroll;
+}
+
+input {
+  @apply outline-primary-purple;
 }
 
 h1,

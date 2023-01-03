@@ -16,7 +16,7 @@ import { Tooltip } from 'common/components/tooltip/Tooltip';
 
 const TextEllipsis = tw.p`text-ellipsis overflow-hidden w-full whitespace-nowrap text-center`;
 const Wrapper = tw.div`sticky top-0 right-0 h-screen bg-white dark:bg-slate-800 w-32
-  shadow-secondary py-10 px-4 grid grid-rows-3-max-tail`;
+ py-10 px-4 grid grid-rows-3-max-tail`;
 
 export function QuickNav() {
   const { isOpen, onToggle } = useDisClosure(false);

@@ -5,6 +5,8 @@ import { FC } from 'react';
 import Layout from 'common/layout';
 import { CategoryListView } from 'features/category/ListView';
 import ProductListView from 'features/product/ListView';
+import { CategoryFormView } from 'features/category/CategoryFormView';
+import { ProductFormView } from 'features/product/ProductFormView';
 
 const routeList: RouteObject[] = [
   {
@@ -21,11 +23,45 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'category',
-        element: <CategoryListView />
+        children: [
+          {
+            index: true,
+            element: <Navigate to={'list'} />
+          },
+          {
+            path: 'list',
+            element: <CategoryListView />
+          },
+          {
+            path: 'add',
+            element: <CategoryFormView />
+          },
+          {
+            path: 'edit/:categoryId',
+            element: <CategoryFormView />
+          }
+        ]
       },
       {
         path: 'product',
-        element: <ProductListView />
+        children: [
+          {
+            index: true,
+            element: <Navigate to={'list'} />
+          },
+          {
+            path: 'list',
+            element: <ProductListView />
+          },
+          {
+            path: 'add',
+            element: <ProductFormView />
+          },
+          {
+            path: 'edit/:categoryId',
+            element: <ProductFormView />
+          }
+        ]
       },
       {
         path: 'sale',
