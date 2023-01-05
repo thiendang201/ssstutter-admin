@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { CircleButton } from 'common/components/button/CircleButton';
 import { TbArrowBack } from 'react-icons/tb';
 import { PropductProps } from 'api/productApi';
+import ProductInfoForm from './ProductInfoForm';
+import { Formik, FormikHelpers, FormikValues } from 'formik';
 
 export const ProductFormView = () => {
   const { productId } = useParams();
@@ -40,12 +42,9 @@ export const ProductFormView = () => {
         </div>
       </div>
       <div className='pt-16 mx-auto'>
-        {/* <CategoryForm
-          initialValues={product}
-          onsubmit={function (data: FormikValues): Promise<void> {
-            throw new Error('Function not implemented.');
-          }} */}
-        {/* /> */}
+        <Formik initialValues={{}} onSubmit={() => {}}>
+          <ProductInfoForm />
+        </Formik>
       </div>
     </div>
   );

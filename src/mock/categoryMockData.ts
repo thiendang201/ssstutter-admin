@@ -1,3 +1,4 @@
+import { GroupOption } from 'common/components/InputField/SelectField';
 import { TEMP_ID_PREFIX } from 'common/constants/common';
 import { CategoryProps } from 'features/category/ListView';
 import { uniqueId } from 'lodash';
@@ -212,3 +213,32 @@ export const mock = {
   parentsId: 1,
   deleted: 0
 };
+
+export const groupCategories: GroupOption[] = [
+  {
+    label: 'nam',
+    options: [
+      {
+        label: 'A',
+        value: 1
+      },
+      {
+        label: 'B',
+        value: 2
+      }
+    ]
+  },
+  {
+    label: 'nữ',
+    options: [
+      {
+        label: 'C',
+        value: 3
+      },
+      {
+        label: 'D',
+        value: 4
+      }
+    ]
+  }
+];

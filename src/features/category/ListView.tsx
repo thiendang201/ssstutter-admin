@@ -16,7 +16,7 @@ import tw from 'twin.macro';
 import { useProductsProps } from 'api/productApi';
 
 export interface CategoryProps {
-  id: number | string;
+  id: number;
   name: string;
   text: string | null;
   img: string | null;

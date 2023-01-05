@@ -1,5 +1,5 @@
 import * as React from 'react';
-import FieldContainer from 'common/components/fieldContainer/FieldContainer';
+import FieldContainer from 'common/components/InputField/FieldContainer';
 
 interface TextFieldProps {
   required?: boolean;
@@ -9,6 +9,7 @@ interface TextFieldProps {
   name: string;
   placeHolder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const TextField: React.FunctionComponent<TextFieldProps> = ({
@@ -18,14 +19,16 @@ const TextField: React.FunctionComponent<TextFieldProps> = ({
   error,
   name,
   placeHolder,
-  onChange
+  onChange,
+  onBlur
 }) => {
   return (
     <FieldContainer required={required} label={label} error={error}>
       <input
-        className='w-full text-sm font-semibold py-4 px-5 rounded shadow-primary'
+        className='w-full text-sm font-medium py-4 px-5 rounded shadow-primary'
         type='text'
         onChange={onChange}
+        onBlur={onBlur}
         value={value}
         name={name}
         placeholder={placeHolder}

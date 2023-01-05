@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import * as React from 'react';
 
 interface FieldContainerProps {
@@ -21,7 +22,14 @@ const FieldContainer: React.FunctionComponent<FieldContainerProps> = ({
             {label} {required && <span className='text-red-400'>*</span>}
           </p>
         )}
-        {children}
+        <div
+          className={classNames([
+            'border border-transparent rounded',
+            error && 'border-red-400'
+          ])}
+        >
+          {children}
+        </div>
       </label>
       <p className='h-6 text-xs font-medium mt-1 text-red-400'>{error}</p>
     </div>

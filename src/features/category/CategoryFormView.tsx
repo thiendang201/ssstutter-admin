@@ -1,15 +1,18 @@
 import { BreadCrumbs } from 'common/components/breadcrumbs/BreadCrumbs';
 import * as React from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { CategoryForm } from 'features/category/CategoryForm';
 import { FormikValues } from 'formik/dist/types';
 import { CategoryProps } from 'features/category/ListView';
 import { CircleButton } from 'common/components/button/CircleButton';
 import { TbArrowBack } from 'react-icons/tb';
+import { useCategories } from 'api/categoryApi';
 
 export const CategoryFormView = () => {
   const { categoryId } = useParams();
+  const { createCategory } = useCategories();
+  const navigate = useNavigate();
   const [category, setCategory] = React.useState<CategoryProps>({
     id: -1,
     name: '',
@@ -19,6 +22,11 @@ export const CategoryFormView = () => {
     deleted: 0,
     text: ''
   });
+
+  const onSubmit = (data: CategoryProps) => {
+    createCategory(data);
+    navigate('/category');
+  };
 
   return (
     <div className='w-[700px] mx-auto'>
@@ -42,12 +50,7 @@ export const CategoryFormView = () => {
         </div>
       </div>
       <div className='pt-16 mx-auto'>
-        <CategoryForm
-          initialValues={category}
-          onsubmit={function (data: FormikValues): Promise<void> {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <CategoryForm initialValues={category} onsubmit={onSubmit} />
       </div>
     </div>
   );

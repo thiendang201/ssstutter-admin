@@ -1,5 +1,5 @@
-import { PaginationProps } from './../types/common';
-import { axiosInstant } from './common';
+import { PaginationProps } from 'types/common';
+import { axiosInstant, getKey } from 'api/common';
 import { CategoryProps } from 'features/category/ListView';
 import { objectToSearchParams, useCreate } from 'api/common';
 import useSWR, { mutate } from 'swr';
@@ -12,16 +12,19 @@ type CategoriesResponse = ApiResponseWithPaginate<CategoryProps>;
 
 export interface useCategoriesProps {
   keyword?: string;
-  page: number;
+  page?: number;
 }
 
-export const useCategories = ({ keyword = '', page }: useCategoriesProps) => {
-  const key =
-    url +
-    objectToSearchParams({
-      keyword,
-      page: page.toString()
-    });
+export const useCategories = ({
+  keyword = '',
+  page = 1
+}: useCategoriesProps = {}) => {
+  const params = {
+    keyword,
+    page: page.toString()
+  };
+
+  const key = getKey(url, params);
 
   let { data, isLoading, isValidating, error } = useSWR<
     CategoriesResponse,
@@ -30,7 +33,7 @@ export const useCategories = ({ keyword = '', page }: useCategoriesProps) => {
     // keepPreviousData: true
   });
 
-  const createCategory = useCreate(key);
+  const createCategory = useCreate(url);
 
   const {
     links = [],

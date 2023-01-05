@@ -1,46 +1,85 @@
 import { Button } from 'common/components/button/Button';
-import TextField from 'common/components/textField/TextField';
-import { Formik, FormikValues, Form } from 'formik';
+import TextField from 'common/components/InputField/TextField';
+import { Formik, FormikValues, Form, FormikHelpers } from 'formik';
 import * as React from 'react';
 import * as Yup from 'yup';
+import SelectField from 'common/components/InputField/SelectField';
+import { useCategories } from 'api/categoryApi';
+import { toOptions } from 'common/utils/common';
+import { getParentsCategories } from 'features/category/utils/common';
+import { CategoryProps } from 'features/category/ListView';
 
-interface CategoryFormProps<T> {
-  initialValues: T;
-  onsubmit: (data: T) => Promise<void>;
+interface CategoryFormProps {
+  initialValues: CategoryProps;
+  onsubmit: (data: CategoryProps) => void;
 }
 
-export const CategoryForm = <T extends FormikValues>({
+export const CategoryForm = ({
   initialValues,
   onsubmit
-}: CategoryFormProps<T>) => {
+}: CategoryFormProps) => {
+  const { categories } = useCategories();
   const schema = Yup.object().shape({
     name: Yup.string().trim().required('Vui lòng nhập tên thể loại!')
   });
+
+  const options = React.useMemo(
+    () => toOptions(getParentsCategories(categories), ['name', 'id']),
+    [categories]
+  );
+
+  const handleSubmit = (
+    values: CategoryProps,
+    formikHelpers: FormikHelpers<CategoryProps>
+  ) => {
+    onsubmit(values);
+  };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={schema}
       enableReinitialize
-      onSubmit={onsubmit}
+      onSubmit={handleSubmit}
     >
-      {(formikProps) => (
-        <Form className='flex flex-col gap-4'>
+      {({
+        values,
+        errors,
+        handleBlur,
+        handleChange,
+        setFieldValue,
+        touched
+      }) => (
+        <Form className='flex flex-col gap-2'>
+          <SelectField
+            label='Danh mục cha'
+            name='parentsId'
+            value={options[0]?.value ?? ''}
+            error={errors.parentsId}
+            options={options}
+            onChange={(value) => setFieldValue('parentsId', value)}
+            onBlur={handleBlur}
+            placeHolder='Chọn danh mục cha'
+          />
           <TextField
             label='Tên thể loại'
             name='name'
             required
-            error={formikProps.errors?.name as string}
-            value={formikProps.values?.name}
-            onChange={formikProps.handleChange}
+            error={touched.name ? errors.name : ''}
+            value={values.name}
+            onChange={handleChange}
+            onBlur={(e) => {
+              handleBlur(e);
+              console.log('blur');
+            }}
             placeHolder='Nhập tên thể loại'
           />
           <TextField
             label='Tên hiển thị'
             name='text'
-            error={formikProps.errors?.text as string}
-            value={formikProps.values?.text}
-            onChange={formikProps.handleChange}
+            error={errors.text}
+            value={values.text ?? ''}
+            onChange={handleChange}
             placeHolder='Nhập tên hiển thị'
           />
           <div className='flex justify-end'>
