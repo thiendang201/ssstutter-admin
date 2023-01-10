@@ -17,7 +17,6 @@ export const groupCategories = (list: CategoryProps[]) => {
       continue;
     }
 
-    console.log(i.parentsId, !i.parentsId, records);
     const option = {
       label: i.name,
       value: i.id

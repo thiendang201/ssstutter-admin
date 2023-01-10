@@ -58,7 +58,7 @@ const routeList: RouteObject[] = [
             element: <ProductFormView />
           },
           {
-            path: 'edit/:categoryId',
+            path: 'edit/:productId',
             element: <ProductFormView />
           }
         ]

@@ -12,5 +12,5 @@ export interface PaginationProps {
 }
 
 export interface ApiResponseWithPaginate<T> extends PaginationProps {
-  data: T[];
+  data: T;
 }

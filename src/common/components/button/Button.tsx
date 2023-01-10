@@ -6,7 +6,8 @@ interface ButtonProps {
 }
 
 export const Button = styled.button(({ variant }: ButtonProps) => [
-  tw`px-7 py-3 rounded-lg flex items-center gap-2 font-semibold text-sm justify-center`,
+  tw`px-7 py-3 rounded-lg flex items-center gap-2 font-semibold text-sm justify-center whitespace-nowrap`,
+  tw`min-h-[48px]`,
   variant === 'primary' && tw`bg-primary-purple text-white`,
   variant === 'secondary' && tw`bg-background`,
   variant === 'outline' && tw`border border-light-blue-grey`

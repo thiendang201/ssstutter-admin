@@ -23,6 +23,11 @@ export const post = async <P, R = P>(url: string, data: P): Promise<R> => {
   return res.data;
 };
 
+export const update = async <P, R = P>(url: string, data: P): Promise<R> => {
+  const res = await axiosInstant.put(url, data);
+  return res.data;
+};
+
 export const objectToSearchParams = (obj: Record<string, string>) => {
   const params = cloneDeep(obj);
 
@@ -57,6 +62,17 @@ export const useCreate =
     };
 
     await mutate(getKey(url), post(url, data), option);
+  };
+
+export const useUpdate =
+  (url: string, option: MutatorOptions = {}) =>
+  async <T>(data: T) => {
+    option = {
+      revalidate: true,
+      ...option
+    };
+
+    await mutate(getKey(url), update(url, data), option);
   };
 
 export const getKey = (url: string, obj: Record<string, string> = {}) =>

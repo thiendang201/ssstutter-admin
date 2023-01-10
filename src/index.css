@@ -8,7 +8,7 @@ html {
 }
 
 input {
-  @apply outline-primary-purple;
+  @apply border-2 border-white focus:border-primary-purple outline-none;
 }
 
 /* Chrome, Safari, Edge, Opera */

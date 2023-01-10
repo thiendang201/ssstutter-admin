@@ -18,8 +18,8 @@ const SearchField = styled.input(
   ({ variant }: Pick<SearchBarProps, 'variant'>) => [
     tw`pl-10 py-3 rounded-lg min-w-66`,
     variant === 'outline' &&
-      tw`bg-transparent border-2 border-light-blue-grey outline-primary-purple 
-      dark:(border-slate-600 outline-primary-purple placeholder:text-slate-600 text-slate-400)`
+      tw`bg-transparent border-2 border-light-blue-grey
+      dark:(border-slate-600 placeholder:text-slate-600 text-slate-400)`
   ]
 );
 

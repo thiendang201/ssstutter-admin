@@ -6,6 +6,7 @@ import Select, {
   SingleValue,
   StylesConfig
 } from 'react-select';
+import { find } from 'lodash';
 
 interface SelectFieldProps {
   required?: boolean;
@@ -15,9 +16,9 @@ interface SelectFieldProps {
   name: string;
   placeHolder?: string;
   options: Option[] | GroupOption[];
-  onChange: (value: string | number) => void;
-  Group?: GroupBase<Option>;
+  onChange: (value: Option) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  initValue?: boolean;
 }
 
 export interface Option {
@@ -41,7 +42,8 @@ const customStyles: StylesConfig<Option> = {
     background: '#FFF',
     cursor: 'pointer',
     boxShadow: '0px 1px 2px rgba(133, 140, 148, 0.05)',
-    fontWeight: 500
+    fontWeight: 500,
+    fontSize: 14
   }),
   menu: (base) => ({
     ...base,
@@ -56,7 +58,10 @@ const customStyles: StylesConfig<Option> = {
     borderRadius: 4,
     overflowY: 'scroll',
     '&::-webkit-scrollbar': {
-      width: 4
+      width: '4px'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#ddd'
     }
   }),
   placeholder: (base) => ({
@@ -96,40 +101,56 @@ const SelectField: React.FunctionComponent<SelectFieldProps> = ({
   error,
   value,
   placeHolder,
+  initValue = true,
   onChange,
   onBlur
 }) => {
   const [selectValue, setSelectValue] = React.useState<Option>();
+  const [isMounted, setIsMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    let option: Option | undefined = undefined;
-
+  const findSelectedOption = () => {
     if (options.length === 0) {
       return;
     }
 
     if ('options' in options[0]) {
       const list = options as GroupOption[];
-      const ontionList = list.reduce<Option[]>(
+      const optionList = list.reduce<Option[]>(
         (prev, group) => [...prev, ...group.options],
         []
       );
-      option = ontionList.find((o) => o.value === value);
-    } else {
-      const list = options as Option[];
-      option = list.find((o) => o.value === value);
+      return optionList.find((o) => o.value === value);
     }
 
-    setSelectValue(option);
-    onChange(option?.value ?? '');
+    const list = options as Option[];
+    return list.find((o) => o.value === value);
+  };
+
+  React.useEffect(() => {
+    if (!initValue || isMounted) return;
+
+    let option = findSelectedOption();
+    if (!option) return;
+
+    setIsMounted(true);
+    onChange(option);
   }, [options]);
+
+  React.useEffect(() => {
+    let option = findSelectedOption();
+    if (!option) return;
+
+    setSelectValue(option);
+  }, [value]);
 
   const handleChange = (
     newValue: SingleValue<Option>,
     actionMeta: ActionMeta<Option>
   ) => {
-    onChange(newValue?.value ?? value);
-    setSelectValue(newValue ?? undefined);
+    if (!newValue) return;
+
+    onChange(newValue);
+    setSelectValue(newValue);
   };
 
   return (
@@ -143,7 +164,6 @@ const SelectField: React.FunctionComponent<SelectFieldProps> = ({
         styles={customStyles}
         onChange={handleChange}
         onBlur={onBlur}
-        // menuIsOpen
       />
     </FieldContainer>
   );

@@ -1,15 +1,26 @@
 import { BreadCrumbs } from 'common/components/breadcrumbs/BreadCrumbs';
 import * as React from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { CircleButton } from 'common/components/button/CircleButton';
 import { TbArrowBack } from 'react-icons/tb';
-import { PropductProps } from 'api/productApi';
+import { PropductProps, useProducts } from 'api/productApi';
 import ProductInfoForm from './ProductInfoForm';
-import { Formik, FormikHelpers, FormikValues } from 'formik';
+import { Form, Formik, FormikHelpers } from 'formik';
+import VariationForm from './VariationForm';
+import { Button } from 'common/components/button/Button';
 
 export const ProductFormView = () => {
   const { productId } = useParams();
+  const {
+    create,
+    update,
+    product: updateProduct
+  } = useProducts({
+    productId: Number(productId) || undefined
+  });
+
+  const navigate = useNavigate();
   const [product, setProduct] = React.useState<PropductProps>({
     id: -1,
     name: '',
@@ -17,8 +28,32 @@ export const ProductFormView = () => {
     img: '',
     deleted: 0,
     description: '',
-    price: 0
+    price: 0,
+    variant: [
+      {
+        colorId: -1,
+        colorName: 'Màu mới',
+        thumbnail: '',
+        sizes: [],
+        images: [],
+        deleted: 0
+      }
+    ]
   });
+
+  React.useEffect(() => {
+    updateProduct && setProduct(updateProduct);
+  }, [updateProduct]);
+
+  const onSubmit = async (
+    values: PropductProps,
+    formikHelpers: FormikHelpers<PropductProps>
+  ) => {
+    console.log(values);
+    !productId && (await create(values));
+    productId && (await update(values));
+    navigate('/product');
+  };
 
   return (
     <div className='w-[700px] mx-auto'>
@@ -42,8 +77,16 @@ export const ProductFormView = () => {
         </div>
       </div>
       <div className='pt-16 mx-auto'>
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <ProductInfoForm />
+        <Formik initialValues={product} onSubmit={onSubmit} enableReinitialize>
+          <Form>
+            <ProductInfoForm />
+            <VariationForm />
+            <div className='flex justify-end mt-4'>
+              <Button type='submit' variant='primary'>
+                Lưu
+              </Button>
+            </div>
+          </Form>
         </Formik>
       </div>
     </div>

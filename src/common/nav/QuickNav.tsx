@@ -13,6 +13,7 @@ import { MdAdd } from 'react-icons/md';
 import { RiSearchLine, RiTShirt2Fill } from 'react-icons/ri';
 import tw from 'twin.macro';
 import { Tooltip } from 'common/components/tooltip/Tooltip';
+import { Link } from 'react-router-dom';
 
 const TextEllipsis = tw.p`text-ellipsis overflow-hidden w-full whitespace-nowrap text-center`;
 const Wrapper = tw.div`sticky top-0 right-0 h-screen bg-white dark:bg-slate-800 w-32
@@ -47,14 +48,17 @@ export function QuickNav() {
           <WithCollapse isOpen={isOpen} onToggle={onToggle}>
             <CollapseContent>
               <div className='flex flex-col items-center gap-4 py-4'>
-                <CircleButton
-                  variant='secondary'
-                  size='lg'
-                  className='shadow-md dark:bg-slate-900 relative group'
-                >
-                  <RiTShirt2Fill size={24} className='text-primary-purple' />
-                  <Tooltip className='right-full mr-2'>Thêm sản phẩm</Tooltip>
-                </CircleButton>
+                <Link to='/product/add'>
+                  <CircleButton
+                    variant='secondary'
+                    size='lg'
+                    onClick={onToggle}
+                    className='shadow-md dark:bg-slate-900 relative group'
+                  >
+                    <RiTShirt2Fill size={24} className='text-primary-purple' />
+                    <Tooltip className='right-full mr-2'>Thêm sản phẩm</Tooltip>
+                  </CircleButton>
+                </Link>
                 <CircleButton
                   variant='secondary'
                   size='lg'

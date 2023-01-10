@@ -61,7 +61,7 @@ const ProductListView = () => {
         }
       },
       {
-        accessorKey: 'categoryId',
+        accessorKey: 'categoryName',
         header: 'Loại sản phẩm',
         cell: (info) => <p className='text-center'>{info.getValue<string>()}</p>
       },

@@ -18,7 +18,7 @@ export const CategoryForm = ({
   initialValues,
   onsubmit
 }: CategoryFormProps) => {
-  const { categories } = useCategories();
+  const { categories } = useCategories({ pagesize: 9999999 });
   const schema = Yup.object().shape({
     name: Yup.string().trim().required('Vui lòng nhập tên thể loại!')
   });
@@ -70,7 +70,6 @@ export const CategoryForm = ({
             onChange={handleChange}
             onBlur={(e) => {
               handleBlur(e);
-              console.log('blur');
             }}
             placeHolder='Nhập tên thể loại'
           />

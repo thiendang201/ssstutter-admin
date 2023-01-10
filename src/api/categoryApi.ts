@@ -8,20 +8,23 @@ import { ApiResponseWithPaginate } from 'types/common';
 
 const url = '/category';
 
-type CategoriesResponse = ApiResponseWithPaginate<CategoryProps>;
+type CategoriesResponse = ApiResponseWithPaginate<CategoryProps[]>;
 
 export interface useCategoriesProps {
   keyword?: string;
   page?: number;
+  pagesize?: number;
 }
 
 export const useCategories = ({
   keyword = '',
-  page = 1
+  page = 1,
+  pagesize = 10
 }: useCategoriesProps = {}) => {
   const params = {
     keyword,
-    page: page.toString()
+    page: page + '',
+    pagesize: pagesize + ''
   };
 
   const key = getKey(url, params);
